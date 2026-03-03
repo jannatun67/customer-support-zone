@@ -1,0 +1,139 @@
+{
+  "tickets": [
+    {
+      "id": 1,
+      "title": "Login Issues - Can't Access Account",
+      "description": "Customer is unable to login into their account. They've tried resetting their password multiple times but still facing authentication errors.",
+      "customer": "John Smith",
+      "priority": "High",
+      "status": "open",
+      "createdAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": 2,
+      "title": "Unable to Download Invoice",
+      "description": "Customer cannot download their invoice without error. The download button triggers a 404 error page.",
+      "customer": "Emma Watson",
+      "priority": "Medium",
+      "status": "open",
+      "createdAt": "2024-01-15T11:45:00Z"
+    },
+    {
+      "id": 3,
+      "title": "App Crash on Launch",
+      "description": "Customer experiences a crash while launching the app causing an unresponsive system. Happens on both iOS and Android.",
+      "customer": "Michael Chen",
+      "priority": "Critical",
+      "status": "open",
+      "createdAt": "2024-01-15T09:15:00Z"
+    },
+    {
+      "id": 4,
+      "title": "Two-Factor Authentication Issue",
+      "description": "Customer is experiencing issues with two-factor authentication. SMS codes are not being received.",
+      "customer": "Sarah Johnson",
+      "priority": "High",
+      "status": "open",
+      "createdAt": "2024-01-14T16:20:00Z"
+    },
+    {
+      "id": 5,
+      "title": "Subscription Auto-Renewal",
+      "description": "Customer wants to disable automatic renewal for their subscription but cannot find the option in settings.",
+      "customer": "David Brown",
+      "priority": "Low",
+      "status": "open",
+      "createdAt": "2024-01-14T14:10:00Z"
+    },
+    {
+      "id": 6,
+      "title": "Payment Method Update Failed",
+      "description": "Customer cannot update their payment method. Getting validation errors with correct card details.",
+      "customer": "Lisa Anderson",
+      "priority": "High",
+      "status": "open",
+      "createdAt": "2024-01-14T12:30:00Z"
+    },
+    {
+      "id": 7,
+      "title": "Data Export Not Working",
+      "description": "Customer requests data export but the export function keeps timing out after 5 minutes.",
+      "customer": "Robert Taylor",
+      "priority": "Medium",
+      "status": "open",
+      "createdAt": "2024-01-13T15:45:00Z"
+    },
+    {
+      "id": 8,
+      "title": "Email Notification Delay",
+      "description": "Customer reports significant delays in receiving email notifications for important updates.",
+      "customer": "Jennifer Lee",
+      "priority": "Medium",
+      "status": "open",
+      "createdAt": "2024-01-13T11:20:00Z"
+    },
+    {
+      "id": 9,
+      "title": "API Integration Failure",
+      "description": "Customer's third-party API integration stopped working after recent update. Getting 401 errors.",
+      "customer": "Thomas Wright",
+      "priority": "High",
+      "status": "open",
+      "createdAt": "2024-01-13T09:00:00Z"
+    },
+    {
+      "id": 10,
+      "title": "Account Deletion Request",
+      "description": "Customer wants to delete their account but cannot find the option in privacy settings.",
+      "customer": "Maria Garcia",
+      "priority": "Low",
+      "status": "open",
+      "createdAt": "2024-01-12T17:30:00Z"
+    },
+    {
+      "id": 11,
+      "title": "Mobile Responsiveness Issue",
+      "description": "Website layout breaks on mobile devices. Elements overlap and become unclickable.",
+      "customer": "James Wilson",
+      "priority": "Medium",
+      "status": "open",
+      "createdAt": "2024-01-12T13:15:00Z"
+    },
+    {
+      "id": 12,
+      "title": "Password Reset Loop",
+      "description": "Customer stuck in password reset loop. Reset emails received but links lead to expired pages.",
+      "customer": "Patricia Martinez",
+      "priority": "High",
+      "status": "open",
+      "createdAt": "2024-01-12T10:45:00Z"
+    },
+    {
+      "id": 13,
+      "title": "Search Function Broken",
+      "description": "Search feature returns no results even for existing content. Filter options also not working.",
+      "customer": "Kevin Anderson",
+      "priority": "Medium",
+      "status": "open",
+      "createdAt": "2024-01-11T16:00:00Z"
+    },
+    {
+      "id": 14,
+      "title": "File Upload Size Limit",
+      "description": "Customer cannot upload files even when they're under the specified size limit.",
+      "customer": "Nancy Thompson",
+      "priority": "Low",
+      "status": "open",
+      "createdAt": "2024-01-11T14:20:00Z"
+    },
+    {
+      "id": 15,
+      "title": "Dashboard Loading Slow",
+      "description": "Dashboard takes over 30 seconds to load. Customer reports this started happening this week.",
+      "customer": "Charles Davis",
+      "priority": "High",
+      "status": "open",
+      "createdAt": "2024-01-11T11:30:00Z"
+    }
+  ]
+}
