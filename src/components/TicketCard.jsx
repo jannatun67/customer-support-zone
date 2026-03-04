@@ -1,115 +1,105 @@
-import React from 'react';
-// import { toast } from 'react-toastify';
+import React from "react";
+import { toast } from "react-toastify";
 
 const TicketCard = ({ ticket, onSelect }) => {
-  const getPriorityColor = (priority) => {
-    switch(priority) {
-      case 'Critical': return 'from-red-500 to-pink-500';
-      case 'High': return 'from-orange-500 to-red-500';
-      case 'Medium': return 'from-yellow-500 to-orange-500';
-      case 'Low': return 'from-green-500 to-emerald-500';
-      default: return 'from-blue-500 to-purple-500';
-    }
-  };
 
-  const getPriorityIcon = (priority) => {
-    switch(priority) {
-      case 'Critical': return 'fa-exclamation-triangle';
-      case 'High': return 'fa-arrow-up';
-      case 'Medium': return 'fa-minus';
-      case 'Low': return 'fa-arrow-down';
-      default: return 'fa-tag';
-    }
-  };
+  const handleClick = () => {
+    onSelect(ticket);
 
-  const getPriorityBadgeColor = (priority) => {
-    switch(priority) {
-      case 'Critical': return 'bg-red-100 text-red-800 border-red-200';
-      case 'High': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'Medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'Low': return 'bg-green-100 text-green-800 border-green-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
+    // ✅ Toast message
+    toast.success("Ticket added successfully!", {
+      position: "top-right",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      theme: "colored",
+    });
   };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return date.toLocaleDateString("en-US", {
+      month: "numeric",
+      day: "numeric",
+      year: "numeric",
+    });
   };
 
-  const handleCardClick = () => {
-    onSelect(ticket);
+  const getPriorityTextColor = (priority) => {
+    switch (priority) {
+      case "High":
+        return "text-red-600";
+      case "Medium":
+        return "text-yellow-600";
+      case "Low":
+        return "text-green-600";
+      case "Critical":
+        return "text-pink-600";
+      default:
+        return "text-gray-600";
+    }
+  };
+
+  const getStatusStyle = (status) => {
+    switch (status?.toLowerCase()) {
+      case "open":
+        return "bg-green-100 text-green-700";
+      case "in-progress":
+        return "bg-yellow-100 text-yellow-700";
+      case "closed":
+        return "bg-gray-200 text-gray-700";
+      default:
+        return "bg-blue-100 text-blue-700";
+    }
+  };
+
+  const formatStatusText = (status) => {
+    if (status === "in-progress") return "In-Progress";
+    return status?.charAt(0).toUpperCase() + status?.slice(1);
   };
 
   return (
     <div
-      onClick={handleCardClick}
-      className="group relative cursor-pointer transform hover:-translate-y-2 transition-all duration-500"
+      onClick={handleClick}
+      className="bg-white rounded-xl shadow-md p-5 border border-gray-200 hover:shadow-lg transition cursor-pointer"
     >
-      {/* Glow Effect */}
-      <div className={`absolute inset-0 bg-gradient-to-r ${getPriorityColor(ticket.priority)} rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500`}></div>
-      
-      {/* Card */}
-      <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100">
-        {/* Priority Header */}
-        <div className={`h-2 bg-gradient-to-r ${getPriorityColor(ticket.priority)}`}></div>
-        
-        <div className="p-6">
-          {/* Header */}
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex-1">
-              <div className="flex items-center space-x-2 mb-3">
-                <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getPriorityBadgeColor(ticket.priority)}`}>
-                  <i className={`fas ${getPriorityIcon(ticket.priority)} mr-1`}></i>
-                  {ticket.priority}
-                </span>
-                <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                  <i className="far fa-clock mr-1"></i>
-                  {formatDate(ticket.createdAt)}
-                </span>
-              </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2 line-clamp-2">
-                {ticket.title}
-              </h3>
-            </div>
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-              {ticket.customer.split(' ').map(n => n[0]).join('')}
-            </div>
-          </div>
-          
-          {/* Description */}
-          <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-            {ticket.description}
+      {/* Header */}
+      <div className="flex justify-between items-start mb-2">
+        <h2 className="text-lg font-semibold text-gray-800">
+          {ticket.title}
+        </h2>
+
+        <span
+          className={`px-3 py-1 text-sm rounded-full font-medium ${getStatusStyle(ticket.status)}`}
+        >
+          ● {formatStatusText(ticket.status)}
+        </span>
+      </div>
+
+      {/* Description */}
+      <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+        {ticket.description}
+      </p>
+
+      {/* Footer */}
+      <div className="flex justify-between items-center text-sm">
+        <div>
+          <p className="text-gray-500">#{ticket.id}</p>
+          <p className={`font-semibold ${getPriorityTextColor(ticket.priority)}`}>
+            {ticket.priority?.toUpperCase()} PRIORITY
           </p>
-          
-          {/* Footer */}
-          <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                <i className="fas fa-user text-gray-500 text-xs"></i>
-              </div>
-              <div>
-                <span className="text-sm font-medium text-gray-700 block">{ticket.customer}</span>
-                <span className="text-xs text-gray-500">Customer</span>
-              </div>
-            </div>
-            <div className="flex space-x-1">
-              <button className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 flex items-center justify-center">
-                <i className="fas fa-arrow-right text-sm"></i>
-              </button>
-            </div>
-          </div>
         </div>
-        
-        {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-purple-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+
+        <div className="text-right">
+          <p className="text-gray-700 font-medium">
+            {ticket.customer}
+          </p>
+          <p className="text-gray-500">
+            {formatDate(ticket.createdAt)}
+          </p>
+        </div>
       </div>
     </div>
   );

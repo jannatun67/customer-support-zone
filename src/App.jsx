@@ -1,8 +1,8 @@
-import './App.css'
-
+import './App.css';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 import Navbar from './components/Navbar';
 import Banner from './components/Banner';
 import TicketCard from './components/TicketCard';
@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import Loader from './components/Loader';
 
 function App() {
+
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [inProgress, setInProgress] = useState(0);
@@ -19,25 +20,35 @@ function App() {
   const [taskStatus, setTaskStatus] = useState([]);
   const [resolvedTickets, setResolvedTickets] = useState([]);
 
-  // 🔥 Fast & Smooth Loader (800ms delay)
+  // ✅ Fetch Tickets
   const fetchTickets = async () => {
     try {
       setLoading(true);
 
-      // Smooth short delay
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // smooth loader delay
+      await new Promise(resolve => setTimeout(resolve, 600));
 
       const response = await fetch('/tickets.json');
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch");
+      }
+
       const data = await response.json();
 
-      setTickets(data.tickets);
+      // ✅ Safe fallback
+      setTickets(data?.tickets || []);
+
+      // 🔥 Reset everything on refresh
+      setTaskStatus([]);
+      setResolvedTickets([]);
+      setInProgress(0);
+      setResolved(0);
 
     } catch (error) {
-      console.error('Error fetching tickets:', error);
-      toast.error('Failed to load tickets. Please refresh the page.', {
+      toast.error('Failed to load tickets!', {
         position: "top-right",
-        autoClose: 5000,
-        theme: "colored",
+        autoClose: 3000,
       });
     } finally {
       setLoading(false);
@@ -48,36 +59,44 @@ function App() {
     fetchTickets();
   }, []);
 
-  // ✅ Safe State Update
+  // ✅ Move Open → In Progress
   const handleTicketSelect = (ticket) => {
-    if (
-      !taskStatus.find(t => t.id === ticket.id) &&
-      !resolvedTickets.find(t => t.id === ticket.id)
-    ) {
-      setTaskStatus(prev => [...prev, ticket]);
-      setInProgress(prev => prev + 1);
-      setTickets(prev => prev.filter(t => t.id !== ticket.id));
-    } else {
-      toast.warning('This ticket is already in progress or resolved!', {
-        position: "top-right",
+
+    const alreadyProcessing =
+      taskStatus.find(t => t.id === ticket.id) ||
+      resolvedTickets.find(t => t.id === ticket.id);
+
+    if (alreadyProcessing) {
+      toast.warning('Ticket already processing or resolved!', {
         autoClose: 2000,
-        theme: "colored",
       });
+      return;
     }
+
+    const updatedTicket = { ...ticket, status: "in-progress" };
+
+    setTaskStatus(prev => [...prev, updatedTicket]);
+    setTickets(prev => prev.filter(t => t.id !== ticket.id));
+    setInProgress(prev => prev + 1);
   };
 
+  // ✅ Move In Progress → Resolved
   const handleTaskComplete = (completedTicket) => {
+
+    const updatedTicket = { ...completedTicket, status: "closed" };
+
     setTaskStatus(prev =>
       prev.filter(t => t.id !== completedTicket.id)
     );
 
-    setResolvedTickets(prev => [...prev, completedTicket]);
+    setResolvedTickets(prev => [...prev, updatedTicket]);
 
-    setInProgress(prev => prev - 1);
+    // prevent negative bug
+    setInProgress(prev => prev > 0 ? prev - 1 : 0);
     setResolved(prev => prev + 1);
   };
 
-  // ✅ Loader View
+  // ✅ Loader UI
   if (loading) {
     return (
       <>
@@ -90,16 +109,17 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+
       <Navbar />
       <Banner inProgress={inProgress} resolved={resolved} />
 
       <main className="container mx-auto px-4 lg:px-8 py-12">
         <div className="flex flex-col lg:flex-row gap-8">
 
-          {/* Left Side */}
+          {/* LEFT SIDE */}
           <div className="lg:w-2/3">
             <div className="mb-8">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
+              <h2 className="text-3xl font-bold text-purple-600 mb-2">
                 Customer Tickets
               </h2>
               <p className="text-gray-600">
@@ -113,13 +133,9 @@ function App() {
                   All Tickets Processed!
                 </h3>
 
-                <p className="text-gray-600 mb-6">
-                  All customer tickets have been resolved or are in progress.
-                </p>
-
                 <button
                   onClick={fetchTickets}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                  className="px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold hover:scale-105 transition"
                 >
                   Refresh Tickets
                 </button>
@@ -137,20 +153,13 @@ function App() {
             )}
           </div>
 
-          {/* Right Side */}
+          {/* RIGHT SIDE */}
           <div className="lg:w-1/3 space-y-8">
 
-            {/* Task Status */}
             <div className="bg-white rounded-2xl shadow-xl p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-800">
-                  Task Status
-                </h3>
-
-                <span className="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm font-semibold">
-                  {inProgress} Active
-                </span>
-              </div>
+              <h3 className="text-xl font-bold mb-4">
+                Task Status ({inProgress})
+              </h3>
 
               <TaskStatus
                 tasks={taskStatus}
@@ -158,17 +167,10 @@ function App() {
               />
             </div>
 
-            {/* Resolved */}
             <div className="bg-white rounded-2xl shadow-xl p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-800">
-                  Resolved
-                </h3>
-
-                <span className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm font-semibold">
-                  {resolved} Completed
-                </span>
-              </div>
+              <h3 className="text-xl font-bold mb-4">
+                Resolved ({resolved})
+              </h3>
 
               <ResolvedList resolved={resolvedTickets} />
             </div>
@@ -178,12 +180,7 @@ function App() {
       </main>
 
       <Footer />
-
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        theme="light"
-      />
+      <ToastContainer />
     </div>
   );
 }
