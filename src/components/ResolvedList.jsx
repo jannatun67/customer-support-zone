@@ -31,7 +31,7 @@ const ResolvedList = ({ resolved }) => {
                   <i className="far fa-calendar-check mr-1 text-emerald-500"></i>
                   Completed
                 </span>
-              </div>
+              </div> 
             </div>
           </div>
           
