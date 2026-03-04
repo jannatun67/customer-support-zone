@@ -46,7 +46,7 @@ function App() {
       setResolved(0);
 
     } catch (error) {
-      toast.error('Failed to load tickets!', {
+      toast?.error('Failed to load tickets!', {
         position: "top-right",
         autoClose: 3000,
       });
